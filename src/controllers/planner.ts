@@ -7,7 +7,6 @@ router.post('/submit_prompt', async (req: Request, res: Response) => {
   try {
     const {prompt, context} = req.body;
     const plannerService = PlannerService.getInstance();
-    console.log({prompt, context})
     const plannerResponse = await plannerService.submitPrompt([...prompt,  context]);
     // Your logic to handle the prompt submission goes here.
     // For example, you can call the GPT-4 API with the prompt and process the response.

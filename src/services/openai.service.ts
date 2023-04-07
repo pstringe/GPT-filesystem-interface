@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Configuration, OpenAIApi } from 'openai';
+import { Configuration, OpenAIApi, ChatCompletionRequestMessage } from 'openai';
 import { Message } from '../models/openai';
 
 class Gpt4Service {
@@ -15,16 +15,6 @@ class Gpt4Service {
     this.orgId = process.env.OPENAI_ORG_ID || '';
     this.baseURL = process.env.OPENAI_BASE_URL || '';
     this.model = 'gpt-4';
-
-    this.openai = axios.create({
-        baseURL: "https://api.openai.com/v1",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        },
-    });
-      
-    console.log(this.openai);
   }
 
   public static getInstance(): Gpt4Service {
@@ -35,31 +25,25 @@ class Gpt4Service {
   }
 
   
-  async createChatCompletion(messages: Message[], options = {}) {
+  async createChatCompletion(messages: ChatCompletionRequestMessage[], options = {}) {
     const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: this.apiKey,
     });
     const openai = new OpenAIApi(configuration);
-    const completion = await openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [{role: "user", content: "Hello world"}],
-    });
-    console.log(completion.data.choices[0].message);
-    return 'test'//completion?.data?.choices[0]?.message ?? 'undefined';
-    /*
-    console.log({messages});
     try {
-      const response = await this.openai.post("/chat/completions", {
+      console.log('messages:', messages);
+      const completion = await openai.createChatCompletion({
         model: this.model,
         messages,
         ...options,
       });
-      //console.log({response});
-      return response;
-    } catch (error) {
-      console.error("Error creating chat completion:", error);
+      console.log('completion:', completion.data.choices[0].message);
+      return completion?.data?.choices[0]?.message?.content ?? 'undefined';    
     }
-    */
+    catch (error: any) {
+      throw new Error(`Error creating chat completion: ${error.message}`);
+    }
+    
   }
   
 }

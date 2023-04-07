@@ -1,5 +1,6 @@
 import Gpt4Service from './openai.service';
 import {Message} from '../models/openai';
+import { ChatCompletionRequestMessageRoleEnum } from 'openai';
 
 class PlannerService {
   private static instance: PlannerService;
@@ -17,7 +18,7 @@ class PlannerService {
   }
 
   async submitPrompt(prompt: string[]): Promise<string> {
-    const messages = prompt.map((text: string) => ({role: 'user', text} as Message));
+    const messages = prompt.map((text: string) => ({role: 'user' as ChatCompletionRequestMessageRoleEnum, content: text}));
     try {
       const gpt4Response = await this.gpt4Service.createChatCompletion(messages);
       console.log({gpt4Response});
