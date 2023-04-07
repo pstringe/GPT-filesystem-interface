@@ -37,6 +37,16 @@ class ImplementerService {
       throw new Error(`Error submitting prompt to GPT-4: ${error.message}`);
     }
   }
+
+  public parseBashCommands(escapedString: string): string[] {
+    try {
+      const parsedArray: string[] = JSON.parse(escapedString);
+      return parsedArray;
+    } catch (error) {
+      console.error('Error parsing bash commands:', error);
+      return [];
+    }
+  }
 }
 
 export default ImplementerService;
