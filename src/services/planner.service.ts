@@ -1,5 +1,6 @@
 import Gpt4Service from './openai.service';
 import {Message} from '../models/openai';
+import {Persona} from '../types';
 import { ChatCompletionRequestMessageRoleEnum } from 'openai';
 
 class PlannerService {
@@ -7,7 +8,7 @@ class PlannerService {
   private gpt4Service: Gpt4Service;
 
   private constructor() {
-    this.gpt4Service = Gpt4Service.getInstance();
+    this.gpt4Service = Gpt4Service.getInstance(Persona.Planner);
   }
 
   public static getInstance(): PlannerService {

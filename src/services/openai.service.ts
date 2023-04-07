@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage } from 'openai';
+import { Persona } from '../types';
 import { Message } from '../models/openai';
 
+
+
 class Gpt4Service {
-  private static instance: Gpt4Service;
+  private static instances: Gpt4Service[] = new Array(2);
   private apiKey: string;
   private orgId: string;
-  private openai: any;
+  private openai: OpenAIApi;
+  private config: Configuration;
   private model: string;
   private baseURL: string;
 
@@ -14,25 +18,27 @@ class Gpt4Service {
     this.apiKey = process.env.OPENAI_API_KEY || '';
     this.orgId = process.env.OPENAI_ORG_ID || '';
     this.baseURL = process.env.OPENAI_BASE_URL || '';
+    
     this.model = 'gpt-4';
+    this.config = new Configuration({
+      apiKey: this.apiKey,
+    })
+    this.openai = new OpenAIApi(this.config);
   }
 
-  public static getInstance(): Gpt4Service {
-    if (!Gpt4Service.instance) {
-      Gpt4Service.instance = new Gpt4Service();
+  public static getInstance(persona: Persona): Gpt4Service {
+    let instance = Gpt4Service.instances[persona];
+    if (!instance) {
+      Gpt4Service.instances[persona] = new Gpt4Service();
+      instance = Gpt4Service.instances[persona];
     }
-    return Gpt4Service.instance;
+    return instance;
   }
-
   
   async createChatCompletion(messages: ChatCompletionRequestMessage[], options = {}) {
-    const configuration = new Configuration({
-      apiKey: this.apiKey,
-    });
-    const openai = new OpenAIApi(configuration);
     try {
       console.log('messages:', messages);
-      const completion = await openai.createChatCompletion({
+      const completion = await this.openai.createChatCompletion({
         model: this.model,
         messages,
         ...options,
