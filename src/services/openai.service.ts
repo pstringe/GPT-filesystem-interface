@@ -1,12 +1,7 @@
 import axios from 'axios';
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage } from 'openai';
-<<<<<<< HEAD
 import { Persona } from '../types';
-=======
->>>>>>> fix gpt4 chat complletion
 import { Message } from '../models/openai';
-
-
 
 class Gpt4Service {
   private static instances: Gpt4Service[] = new Array(2);
