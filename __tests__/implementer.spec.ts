@@ -31,7 +31,6 @@ describe('ImplementerService', () => {
       ]
 
     const result = implementerService.parseBashCommands(escapedString);
-    console.log(result)
     expect(result).toEqual(expect.arrayContaining(expectedCommands));
   });
 });

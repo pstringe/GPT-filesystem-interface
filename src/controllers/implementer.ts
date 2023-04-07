@@ -25,4 +25,27 @@ router.post('/commands', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/execute', async (req: Request, res: Response) => {
+    try {
+        const {prompt, context} = req.body;
+        const implementerService = ImplementerService.getInstance();
+        const implementerResponse = await implementerService.retrieveCommands([...prompt,  context]);
+        const commands = implementerService.parseBashCommands(implementerResponse);
+        const executionResponse = await implementerService.executeBashCommands(commands);
+        res.status(200).json({
+            success: true,
+            message: 'Prompt submitted successfully',
+            response: executionResponse,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while submitting the prompt',
+            error: error.message,
+        });
+    }
+});
+
+
+
 export default router;
