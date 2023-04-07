@@ -3,7 +3,7 @@ import PlannerService from '../services/planner.service';
 
 const router = express.Router();
 
-router.post('/submit_prompt', async (req: Request, res: Response) => {
+router.post('/procedure', async (req: Request, res: Response) => {
   try {
     const {prompt, context} = req.body;
     const plannerService = PlannerService.getInstance();
